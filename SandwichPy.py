@@ -1,3 +1,4 @@
+import pymongo
 import discord
 import asyncio
 from enum import Enum
@@ -6,43 +7,19 @@ from discord.ext import commands
 import logging
 import string
 
+#do not edit
+bot = commands.Bot(command_prefix =';;', pm_help = True)
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
-
-sandwiches = []
-
-bot = commands.Bot(command_prefix =';', pm_help = True)
-
-class Status(Enum):
-    Waiting = 0
-    Accepted = 1
-    Cooking = 2
-    ReadyForDelivery = 4
-    Delivered = 8
-    
-def id_generator(size=3, chars=string.ascii_uppercase + string.digits):
-   return ''.join(random.choice(chars) for _ in range(size))
-
-class Sandwich:
-    id = id_generator()
-    description = ""
-    status = Status.Waiting
-    customer = 0
-    chef = 0
-    server = 0
-    channel = 0
-
-
+admins = ['162330485714845696', 131182268021604352]
 @bot.event
 async def on_ready():
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print('------')
-
+    print('Logged in as '+ bot.user.name, "with id "+ bot.user.id, '\n')
+    bot.change_presence(game='give me something to do to kill some time', status='dnd')
+#Change from here on!
 
 @bot.command(pass_context=True)
 async def order(ctx, *, orderdescription: str):
@@ -179,4 +156,13 @@ async def getallorders(ctx):
        
     await bot.say(orders)
 
-bot.run(':kanna-sus:')
+@bot.command(pass_context=True)
+async def shutdown(ctx):
+    if ctx.message.author.id in admins:
+        await bot.say("Adios")
+        bot.logout()
+    else:
+        await bot.say("error: permission denied")
+        print(ctx.message.author, "("+ctx.message.author.id+")", "tried to shutdown the bot!")
+
+bot.run('no token, sorry')
