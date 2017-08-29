@@ -21,6 +21,28 @@ async def on_ready():
     bot.change_presence(game='give me something to do to kill some time', status='dnd')
 #Change from here on!
 
+sandwiches = []
+
+class Status(Enum):
+    Waiting = 0
+    Accepted = 1
+    Cooking = 2
+    ReadyForDelivery = 4
+    Delivered = 8
+    
+def id_generator(size=3, chars=string.ascii_uppercase + string.digits):
+   return ''.join(random.choice(chars) for _ in range(size))
+
+class Sandwich:
+    id = id_generator()
+    description = ""
+    status = Status.Waiting
+    customer = 0
+    chef = 0
+    server = 0
+    channel = 0
+
+
 @bot.command(pass_context=True)
 async def order(ctx, *, orderdescription: str):
     """Order something!"""
